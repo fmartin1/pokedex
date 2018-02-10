@@ -1,4 +1,4 @@
-package fmartin1.common;
+package fmartin1.model.common;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package fmartin1.pokemon.type;
+package fmartin1.model.type;
 
 public class Types {
     public static final String BUG = "bug";

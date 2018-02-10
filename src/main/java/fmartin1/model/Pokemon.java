@@ -1,23 +1,20 @@
-package fmartin1.pokemon;
+package fmartin1.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import fmartin1.common.NamedAPIResource;
-import fmartin1.pokemon.generation.Generations;
-import fmartin1.pokemon.type.Type;
+import fmartin1.model.generation.Generations;
 import fmartin1.util.URLUtil;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class Pokemon implements Comparable<Pokemon> {
 
-    private Integer id;
-    private String name;
-    private String url;
-    private PokemonType[] types = new PokemonType[2];
-    private Generations.Generation generation;
+    private Integer _id;
+    private String _name;
+    private String _url;
+    private PokemonType[] _types = new PokemonType[2];
+    private Generations.Generation _generation;
 
     public Pokemon(String name, String url) {
-        this.name = name;
+        _name = name;
         setUrl(url);
     }
 
@@ -25,60 +22,60 @@ public class Pokemon implements Comparable<Pokemon> {
     }
 
     public Generations.Generation getGeneration() {
-        return generation;
+        return _generation;
     }
 
     public void setGeneration(Generations.Generation generation) {
-        this.generation = generation;
+        this._generation = generation;
     }
 
     public Integer getId() {
-        return id;
+        return _id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-        generation = Generations.getByPokemonId(id);
+    public void set_id(Integer _id) {
+        this._id = _id;
+        _generation = Generations.getByPokemonId(_id);
     }
 
     public String getName() {
-        return name;
+        return _name;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this._name = name;
     }
 
     public String getUrl() {
-        return url;
+        return _url;
     }
 
     public void setUrl(String url) {
-        this.url = url;
-        setId(URLUtil.getIdFromUrl(url));
+        this._url = url;
+        set_id(URLUtil.getIdFromUrl(url));
     }
 
     public PokemonType[] getTypes() {
-        return types;
+        return _types;
     }
 
     public void setTypes(PokemonType[] types) {
-        this.types = types;
+        this._types = types;
     }
 
     public String getTypeName(Integer slot) {
-        return types[slot-1]!=null ? types[slot-1].getType().getName():"";
+        return _types[slot-1]!=null ? _types[slot-1].getType().getName():"";
     }
 
     public boolean hasTypeSlot(int slot) {
-        return 0<slot && slot<3 && types[slot-1]!=null;
+        return 0<slot && slot<3 && _types[slot-1]!=null;
     }
 
     @Override
     public String toString() {
         return String.format(
                 "%03d %-20s %s Types %8s %8s",
-                id.intValue(), name, generation.getName(),getTypeName(1),getTypeName(2));
+                _id.intValue(), _name, _generation.getName(),getTypeName(1),getTypeName(2));
     }
 
     @Override
@@ -88,16 +85,16 @@ public class Pokemon implements Comparable<Pokemon> {
 
         Pokemon pokemon = (Pokemon) o;
 
-        return id.equals(pokemon.id);
+        return _id.equals(pokemon._id);
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return _id.hashCode();
     }
 
     @Override
     public int compareTo(Pokemon o) {
-        return id.compareTo(o.id);
+        return _id.compareTo(o._id);
     }
 }

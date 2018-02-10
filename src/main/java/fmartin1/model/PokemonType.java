@@ -1,7 +1,7 @@
-package fmartin1.pokemon;
+package fmartin1.model;
 
-import fmartin1.common.NamedAPIResource;
-import fmartin1.pokemon.type.Type;
+import fmartin1.model.common.NamedAPIResource;
+import fmartin1.model.type.Type;
 
 public class PokemonType {
     private int slot;

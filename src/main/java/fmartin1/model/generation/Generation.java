@@ -1,9 +1,9 @@
-package fmartin1.pokemon.generation;
+package fmartin1.model.generation;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import fmartin1.common.NamedAPIContainer;
-import fmartin1.common.NamedAPIResource;
-import fmartin1.pokemon.type.PokemonSpecies;
+import fmartin1.model.common.NamedAPIContainer;
+import fmartin1.model.common.NamedAPIResource;
+import fmartin1.model.type.PokemonSpecies;
 
 import java.util.Arrays;
 import java.util.List;

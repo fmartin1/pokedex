@@ -1,8 +1,8 @@
-package fmartin1.pokemon.type;
+package fmartin1.model.common;
 
-public class PokemonSpecies {
-    String name;
-    String url;
+public class NamedAPIResource<T> {
+    private String name;
+    private String url;
 
     public String getName() {
         return name;

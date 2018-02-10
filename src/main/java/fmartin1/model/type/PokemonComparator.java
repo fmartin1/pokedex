@@ -1,7 +1,7 @@
-package fmartin1.pokemon.type;
+package fmartin1.model.type;
 
 
-import fmartin1.pokemon.Pokemon;
+import fmartin1.model.Pokemon;
 
 import java.util.Comparator;
 

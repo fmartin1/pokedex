@@ -1,4 +1,4 @@
-package fmartin1.pokemon.generation;
+package fmartin1.model.generation;
 
 public class Generations {
     public enum Generation {

@@ -1,8 +1,8 @@
-package fmartin1.pokemon.type;
+package fmartin1.model.type;
 
 
-import fmartin1.common.NamedAPIResource;
-import fmartin1.pokemon.Pokemon;
+import fmartin1.model.common.NamedAPIResource;
+import fmartin1.model.Pokemon;
 import fmartin1.util.URLUtil;
 
 public class TypePokemon {

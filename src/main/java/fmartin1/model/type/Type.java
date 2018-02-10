@@ -1,4 +1,4 @@
-package fmartin1.pokemon.type;
+package fmartin1.model.type;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
