@@ -1,20 +1,13 @@
 package fmartin1.service;
 
-import fmartin1.common.Endpoint;
 import fmartin1.common.NamedAPIResource;
 import fmartin1.pokemon.Pokemon;
 import fmartin1.pokemon.PokemonType;
 import fmartin1.pokemon.type.Type;
 import fmartin1.util.PokeLog;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
 import java.io.*;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 public class PokeData {
     private static final String URI = "https://pokeapi.co/api/v2/";
@@ -27,13 +20,8 @@ public class PokeData {
 
     private static PokeData pokeData;
 
-    private final Client client;
-    private final WebTarget pokeApiTarget;
-
     private PokeData() {
         super();
-        client = ClientBuilder.newClient(); PokeLog.log("Client created");
-        pokeApiTarget = client.target(URI); PokeLog.log("Target set to " + URI);
     }
 
     public static PokeData getInstance() {
@@ -44,13 +32,13 @@ public class PokeData {
     public LinkedHashMap<String, Pokemon> getPokemon() {
         LinkedHashMap<String, Pokemon> pokemonMap = getPokemonFromCSV();
         if(pokemonMap.isEmpty()) {
-            pokemonMap = getPokemonFromAPI();
+            //pokemonMap = getPokemonFromAPI();
             if(!pokemonMap.isEmpty()) writePokemonToCSV(pokemonMap);
         }
         PokeLog.log("Found " + pokemonMap.size() + " results", false);
         return pokemonMap;
     }
-
+/*
     private LinkedHashMap<String, Pokemon> getPokemonFromAPI() {
         LinkedHashMap<String, Pokemon> pokemonMap = new LinkedHashMap<>();
         PokeLog.log("Getting ordered map of all pokemon...", true);
@@ -84,7 +72,7 @@ public class PokeData {
 
         return pokemonMap;
     }
-
+*/
     private LinkedHashMap<String, Pokemon> getPokemonFromCSV() {
         LinkedHashMap<String, Pokemon> pokemonMap = new LinkedHashMap<>();
         PokeLog.log("Getting ordered map of all pokemon...", true);
@@ -98,8 +86,6 @@ public class PokeData {
                     });
         } catch (FileNotFoundException e) {
             PokeLog.log(CACHE_PATH + " not found");
-        } catch (IOException e) {
-            e.printStackTrace();
         } finally {
             if (bufferedReader != null) {
                 try {
@@ -112,13 +98,13 @@ public class PokeData {
 
         return pokemonMap;
     }
-
+/*
     private <T> T consume(String resource, Class<T> resourceClass) {
         PokeLog.log("Retrieving " + pokeApiTarget.getUri() + resource);
         return pokeApiTarget.path(resource)
                 .request(MediaType.APPLICATION_JSON)
                 .get(resourceClass);
-    }
+    }*/
 
     /*
         LOAD/SAVE FROM/TO CSV FILE.
