@@ -1,43 +1,31 @@
 package fmartin1.model.common;
 
 public class Endpoint {
-    private Integer count;
-    private String previous;
-    private String next;
-    private NamedAPIResource[] results;
+    private final Integer count;
+    private final String previous;
+    private final String next;
+    private final NamedAPIResource[] results;
 
-    public Endpoint() {
+    public Endpoint(Integer count, String previous, String next, NamedAPIResource[] results) {
+        this.count = count;
+        this.previous = previous;
+        this.next = next;
+        this.results = results;
     }
 
     public Integer getCount() {
         return count;
     }
 
-    public void setCount(Integer count) {
-        this.count = count;
-    }
-
     public String getPrevious() {
         return previous;
-    }
-
-    public void setPrevious(String previous) {
-        this.previous = previous;
     }
 
     public String getNext() {
         return next;
     }
 
-    public void setNext(String next) {
-        this.next = next;
-    }
-
     public NamedAPIResource[] getResults() {
         return results;
-    }
-
-    public void setResults(NamedAPIResource[] results) {
-        this.results = results;
     }
 }

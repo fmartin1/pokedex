@@ -1,8 +1,8 @@
 package fmartin1.controller;
 
 
-import fmartin1.model.Pokemon;
-import fmartin1.model.type.PokemonComparator;
+import fmartin1.model.pokemon.Pokemon;
+import fmartin1.model.pokemon.PokemonComparator;
 import fmartin1.service.PokedexService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -13,47 +13,36 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 @Controller
-@RequestMapping("/pokemon")
-public class PokemonResourceController {
+@RequestMapping("pokemon")
+public class PokedexController {
     private final PokedexService _pokedexService;
 
     @Autowired
-    public PokemonResourceController(PokedexService pokedexService) {
+    public PokedexController(PokedexService pokedexService) {
         _pokedexService = pokedexService;
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
-    public String getPokemonEndpoint(@RequestParam(value = "limit",required = false) Integer limit) {
-        try {
-            return _pokedexService.getPokemonEndPoint(limit)
-                    .stream()
-                    .map(Pokemon::toString)
-                    .collect(Collectors.joining("\n"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
-
-    @RequestMapping(value="/hello", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
-    @ResponseBody
-    public String helloWorld() {
-        return "hello";
-    }
-
-    @RequestMapping(value = "/{string}", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
-    @ResponseBody
-    public String getPokemon(@PathVariable("string") String string) {
-        return _pokedexService.getPokemon(string.toLowerCase())
+    public String getAllPokemon(@RequestParam(value = "limit", required = false) Integer limit) {
+        return _pokedexService.getAllPokemon(limit)
+                .stream()
                 .map(Pokemon::toString)
-                .orElse(String.format("Pokemon \"%s\" not found.", string));
+                .collect(Collectors.joining("\n"));
+    }
+
+    @RequestMapping(value = "/{pokemonIdName}", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
+    @ResponseBody
+    public String getPokemon(@PathVariable("pokemonIdName") String pokemonIdName) {
+        return _pokedexService.getPokemon(pokemonIdName.toLowerCase())
+                .map(Pokemon::toString)
+                .orElse(String.format("Pokemon \"%s\" not found.", pokemonIdName));
     }
 
     @RequestMapping(value = "/type", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
     public String sortByType() {
-        return _pokedexService.getPokemonEndPoint(null)
+        return _pokedexService.getAllPokemon()
                 .stream()
                 .sorted(new PokemonComparator(PokemonComparator.Criteria.TYPE))
                 .map(Pokemon::toString)
@@ -72,7 +61,7 @@ public class PokemonResourceController {
     @RequestMapping(value = "/generation", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
     public String sortByGeneration() {
-        return _pokedexService.getPokemonEndPoint(null)
+        return _pokedexService.getAllPokemon()
                 .stream()
                 .sorted(new PokemonComparator(PokemonComparator.Criteria.GENERATION))
                 .map(Pokemon::toString)
