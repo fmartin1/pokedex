@@ -1,7 +1,7 @@
 package fmartin1.model.pokemon;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import fmartin1.model.common.NamedAPIResource;
+import fmartin1.model.pokeapi.PokeAPINamedResource;
 import fmartin1.model.pokemon.generation.Generation;
 import fmartin1.model.pokemon.generation.Generations;
 import fmartin1.model.pokemon.type.Type;
@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @SuppressWarnings("unused")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Pokemon extends NamedAPIResource implements Comparable<Pokemon> {
+public class Pokemon extends PokeAPINamedResource implements Comparable<Pokemon> {
     private static final int ID_URL_INDEX = 6;
     private final int _id;
     private final Generation _generation;

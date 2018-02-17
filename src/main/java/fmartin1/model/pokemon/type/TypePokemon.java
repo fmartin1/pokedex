@@ -2,13 +2,13 @@ package fmartin1.model.pokemon.type;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import fmartin1.model.common.NamedAPIResource;
+import fmartin1.model.pokeapi.PokeAPINamedResource;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TypePokemon {
-    private final NamedAPIResource _pokemon;
+    private final PokeAPINamedResource _pokemon;
 
-    public NamedAPIResource getPokemon() {
+    public PokeAPINamedResource getPokemon() {
         return _pokemon;
     }
 
@@ -18,7 +18,7 @@ public class TypePokemon {
         return _slot;
     }
 
-    public TypePokemon(NamedAPIResource pokemon, int slot) {
+    public TypePokemon(PokeAPINamedResource pokemon, int slot) {
         _pokemon = pokemon;
         _slot = slot;
     }

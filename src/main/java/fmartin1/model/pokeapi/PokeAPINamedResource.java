@@ -1,15 +1,15 @@
-package fmartin1.model.common;
+package fmartin1.model.pokeapi;
 
-public class NamedAPIResource {
+public class PokeAPINamedResource {
     protected final String _name;
     private final String _url;
 
-    public NamedAPIResource(String name, String url) {
+    public PokeAPINamedResource(String name, String url) {
         _name = name;
         _url = url;
     }
 
-    public NamedAPIResource(String name) {
+    public PokeAPINamedResource(String name) {
         _name = name;
         _url = null;
     }
@@ -27,7 +27,7 @@ public class NamedAPIResource {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        NamedAPIResource that = (NamedAPIResource) o;
+        PokeAPINamedResource that = (PokeAPINamedResource) o;
 
         assert _url != null;
         return _url.equals(that._url);

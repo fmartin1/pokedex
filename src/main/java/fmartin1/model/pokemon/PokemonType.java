@@ -1,13 +1,13 @@
 package fmartin1.model.pokemon;
 
-import fmartin1.model.common.NamedAPIResource;
+import fmartin1.model.pokeapi.PokeAPINamedResource;
 
 @SuppressWarnings("unused")
 public class PokemonType {
     private final int _slot;
-    private final NamedAPIResource _type;
+    private final PokeAPINamedResource _type;
 
-    public PokemonType(int slot, NamedAPIResource type) {
+    public PokemonType(int slot, PokeAPINamedResource type) {
         _slot = slot;
         _type = type;
     }
@@ -16,7 +16,7 @@ public class PokemonType {
         return _slot;
     }
 
-    NamedAPIResource getType() {
+    PokeAPINamedResource getType() {
         return _type;
     }
 }

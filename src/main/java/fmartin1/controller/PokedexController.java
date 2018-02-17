@@ -3,7 +3,7 @@ package fmartin1.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fmartin1.model.common.NamedAPIResource;
+import fmartin1.model.pokeapi.PokeAPINamedResource;
 import fmartin1.model.pokemon.Pokemon;
 import fmartin1.service.PokedexService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +45,7 @@ public class PokedexController {
     public String getPokemonById(@PathVariable("pokemonId") int pokemonId) {
         try {
             Pokemon pokemon = _pokedexService.getPokemonById(pokemonId);
-            return pokemon != null ? _objectMapper.writeValueAsString(pokemon) : _objectMapper.writeValueAsString(new NamedAPIResource("Resource not found."));
+            return pokemon != null ? _objectMapper.writeValueAsString(pokemon) : _objectMapper.writeValueAsString(new PokeAPINamedResource("Resource not found."));
         } catch (JsonProcessingException ignored) {
             return "";
         }
@@ -56,7 +56,7 @@ public class PokedexController {
     public String getPokemonByName(@PathVariable("pokemonName") String pokemonName) {
         try {
             Pokemon pokemon = _pokedexService.getPokemonByName(pokemonName.toLowerCase());
-            return pokemon != null ? _objectMapper.writeValueAsString(pokemon) : _objectMapper.writeValueAsString(new NamedAPIResource("Resource not found."));
+            return pokemon != null ? _objectMapper.writeValueAsString(pokemon) : _objectMapper.writeValueAsString(new PokeAPINamedResource("Resource not found."));
         } catch (JsonProcessingException ignored) {
             return "";
         }

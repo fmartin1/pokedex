@@ -1,10 +1,9 @@
 package fmartin1.service;
 
-import fmartin1.model.common.Endpoint;
-import fmartin1.model.common.NamedAPIResource;
+import fmartin1.model.pokeapi.PokeAPIEndpoint;
+import fmartin1.model.pokeapi.PokeAPINamedResource;
 import fmartin1.model.pokemon.Pokemon;
 import fmartin1.model.pokemon.type.Type;
-import fmartin1.model.pokemon.type.TypePokemon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -41,14 +40,14 @@ public class PokeDataService {
 
     private void getPokemonFromApi() {
         //TODO: encontrar por que esto truena.
-        Endpoint allPokemonEndpoint = _restTemplate.getForObject("https://pokeapi.co/api/v2/pokemon/", Endpoint.class);
-        for (NamedAPIResource pokemonResource : allPokemonEndpoint.getResults()) {
+        PokeAPIEndpoint allPokemonEndpoint = _restTemplate.getForObject("https://pokeapi.co/api/v2/pokemon/", PokeAPIEndpoint.class);
+        for (PokeAPINamedResource pokemonResource : allPokemonEndpoint.getResults()) {
             Pokemon pokemon = new Pokemon(pokemonResource.getName(), pokemonResource.getUrl());
             _pokemonMap.put(pokemon.getName(), pokemon);
         }
 
-        Endpoint allTypesEndpoint = _restTemplate.getForObject("https://pokeapi.co/api/v2/type/", Endpoint.class);
-        for (NamedAPIResource typeResource : allTypesEndpoint.getResults()) {
+        PokeAPIEndpoint allTypesEndpoint = _restTemplate.getForObject("https://pokeapi.co/api/v2/type/", PokeAPIEndpoint.class);
+        for (PokeAPINamedResource typeResource : allTypesEndpoint.getResults()) {
             Type type = _restTemplate.getForObject("https://pokeapi.co/api/v2/type/" + typeResource.getName(), Type.class);
             type.getPokemon().stream().filter(typePokemon -> _pokemonMap.containsKey(typePokemon.getPokemon().getName())).forEach(typePokemon -> {
                 List<Type> types = _pokemonMap.get(typePokemon.getPokemon().getName()).getTypes();
