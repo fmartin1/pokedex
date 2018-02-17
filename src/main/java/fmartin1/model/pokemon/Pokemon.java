@@ -44,7 +44,7 @@ public class Pokemon extends PokeAPINamedResource implements Comparable<Pokemon>
 
     @Override
     public String toString() {
-        return String.format("%03d %-20s %s Types %8s %8s", _id, _name, _generation.getName(),
+        return String.format("%03d %-20s %s Types %8s %8s", _id, super.getName(), _generation.getName(),
                 getType(Type.Slot.FIRST).map(Type::getName).orElse(""),
                 getType(Type.Slot.SECOND).map(Type::getName).orElse(""));
     }

@@ -1,125 +1,59 @@
 package fmartin1.controller;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import fmartin1.model.pokeapi.PokeAPINamedResource;
 import fmartin1.model.pokemon.Pokemon;
 import fmartin1.service.PokedexService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @SuppressWarnings("unused")
-@Controller
+@RestController
 @RequestMapping("pokemon")
 public class PokedexController {
     private final PokedexService _pokedexService;
-    private final ObjectMapper _objectMapper = new ObjectMapper();
 
     @Autowired
-    public PokedexController(PokedexService _pokedexService) {
-        this._pokedexService = _pokedexService;
+    public PokedexController(PokedexService pokedexService) {
+        _pokedexService = pokedexService;
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ResponseBody
-    public String getAllPokemon(@RequestParam(value = "maxPokemonCount", required = false) Integer maxPokemonCount) {
-        String response = "";
-        try {
-            StringBuilder json = new StringBuilder("[");
-            for (Pokemon pokemon : _pokedexService.getAllPokemon(maxPokemonCount)) {
-                json.append(_objectMapper.writeValueAsString(pokemon)).append(",");
-            }
-            json.deleteCharAt(json.length() - 1);
-            json.append("]");
-            response = json.toString();
-        } catch (JsonProcessingException ignored) {
-        }
-        return response;
+    @RequestMapping(value = "/")
+    public List<Pokemon> getAllPokemon(@RequestParam(value = "maxPokemonCount", required = false) Integer maxPokemonCount) {
+        return _pokedexService.getAllPokemon(maxPokemonCount);
     }
 
-    @RequestMapping(value = "/id/{pokemonId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ResponseBody
-    public String getPokemonById(@PathVariable("pokemonId") int pokemonId) {
-        try {
-            Pokemon pokemon = _pokedexService.getPokemonById(pokemonId);
-            return pokemon != null ? _objectMapper.writeValueAsString(pokemon) : _objectMapper.writeValueAsString(new PokeAPINamedResource("Resource not found."));
-        } catch (JsonProcessingException ignored) {
-            return "";
-        }
+    @RequestMapping(value = "/id/{pokemonId}")
+    public Pokemon getPokemonById(@PathVariable("pokemonId") int pokemonId) {
+        return _pokedexService.getPokemonById(pokemonId);
     }
 
-    @RequestMapping(value = "/name/{pokemonName}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ResponseBody
-    public String getPokemonByName(@PathVariable("pokemonName") String pokemonName) {
-        try {
-            Pokemon pokemon = _pokedexService.getPokemonByName(pokemonName.toLowerCase());
-            return pokemon != null ? _objectMapper.writeValueAsString(pokemon) : _objectMapper.writeValueAsString(new PokeAPINamedResource("Resource not found."));
-        } catch (JsonProcessingException ignored) {
-            return "";
-        }
+    @RequestMapping(value = "/name/{pokemonName}")
+    public Pokemon getPokemonByName(@PathVariable("pokemonName") String pokemonName) {
+        return _pokedexService.getPokemonByName(pokemonName.toLowerCase());
     }
 
-    @RequestMapping(value = "/type", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ResponseBody
-    public String sortPokemonByType() {
-        String response = "";
-        try {
-            StringBuilder json = new StringBuilder("[");
-            for (Pokemon pokemon : _pokedexService.getPokemonSortedByType()) {
-                json.append(_objectMapper.writeValueAsString(pokemon)).append(",");
-            }
-            json.deleteCharAt(json.length() - 1);
-            json.append("]");
-            response = json.toString();
-        } catch (JsonProcessingException ignored) {
-        }
-        return response;
+    @RequestMapping(value = "/type")
+    public List<Pokemon> sortPokemonByType() {
+        return _pokedexService.getPokemonSortedByType();
     }
 
-    @RequestMapping(value = "/type/{typeName}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ResponseBody
-    public String getPokemonByType(@PathVariable("typeName") String typeName) {
-        String response = "";
-        try {
-            StringBuilder json = new StringBuilder("[");
-            for (Pokemon pokemon : _pokedexService.getPokemonOfType(typeName)) {
-                json.append(_objectMapper.writeValueAsString(pokemon)).append(",");
-            }
-            json.deleteCharAt(json.length() - 1);
-            json.append("]");
-            response = json.toString();
-        } catch (JsonProcessingException ignored) {
-        }
-        return response;
+    @RequestMapping(value = "/type/{typeName}")
+    public List<Pokemon> getPokemonByType(@PathVariable("typeName") String typeName) {
+        return _pokedexService.getPokemonOfType(typeName);
     }
 
-    @RequestMapping(value = "/generation", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ResponseBody
-    public String sortPokemonByGeneration() {
-        String response = "";
-        try {
-            StringBuilder json = new StringBuilder("[");
-            for (Pokemon pokemon : _pokedexService.getAllPokemon()) {
-                json.append(_objectMapper.writeValueAsString(pokemon)).append(",");
-            }
-            json.deleteCharAt(json.length() - 1);
-            json.append("]");
-            response = json.toString();
-        } catch (JsonProcessingException ignored) {
-        }
-        return response;
+    @RequestMapping(value = "/generation")
+    public List<Pokemon> sortPokemonByGeneration() {
+        return _pokedexService.getAllPokemon();
     }
 
-    @RequestMapping(value = "/generation/{generationId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ResponseBody
-    public String getPokemonInGeneration(@PathVariable("generationId") int genId) {
-        try {
-            return _objectMapper.writeValueAsString(_pokedexService.getPokemonOfGeneration(genId));
-        } catch (JsonProcessingException ignored) {
-            return "";
-        }
+    @RequestMapping(value = "/generation/{generationId}")
+    public List<Pokemon> getPokemonInGeneration(@PathVariable("generationId") int genId) {
+        return _pokedexService.getPokemonOfGeneration(genId);
     }
 }
