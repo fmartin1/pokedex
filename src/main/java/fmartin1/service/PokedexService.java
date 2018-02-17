@@ -42,7 +42,7 @@ public class PokedexService {
         return getPokemonMap().values().stream()
                 .filter(pokemon ->
                         type.equals(pokemon.getType(Type.Slot.FIRST).map(Type::getName).orElse(null)) ||
-                        type.equals(pokemon.getType(Type.Slot.SECOND).map(Type::getName).orElse(null)))
+                                type.equals(pokemon.getType(Type.Slot.SECOND).map(Type::getName).orElse(null)))
                 .collect(Collectors.toList());
     }
 
@@ -55,13 +55,13 @@ public class PokedexService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<Pokemon> getPokemon(String string) {
+    public Pokemon getPokemon(String string) {
         if (string.matches("\\d+")) {
             int index = Integer.parseInt(string) - 1;
-            return Optional.ofNullable((0 < index && index < getPokemonMap().size()) ?
-                    (Pokemon) getPokemonMap().values().toArray()[index] : null);
+            return (0 < index && index < getPokemonMap().size()) ?
+                    (Pokemon) getPokemonMap().values().toArray()[index] : null;
         } else {
-            return Optional.ofNullable(getPokemonMap().get(string));
+            return getPokemonMap().get(string);
         }
     }
 }

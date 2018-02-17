@@ -3,12 +3,14 @@ package fmartin1.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fmartin1.model.common.NamedAPIResource;
 import fmartin1.model.pokemon.Pokemon;
 import fmartin1.model.pokemon.PokemonComparator;
 import fmartin1.service.PokedexService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,7 +48,8 @@ public class PokedexController {
     @ResponseBody
     public String getPokemon(@PathVariable("pokemonIdName") String pokemonIdName) {
         try {
-            return _objectMapper.writeValueAsString(_pokedexService.getPokemon(pokemonIdName.toLowerCase()).get());
+            Pokemon pokemon = _pokedexService.getPokemon(pokemonIdName.toLowerCase());
+            return pokemon != null ? _objectMapper.writeValueAsString(pokemon) : _objectMapper.writeValueAsString(new NamedAPIResource("Resource not found."));
         } catch (JsonProcessingException ignored) {
             return "";
         }
@@ -102,5 +105,12 @@ public class PokedexController {
         } catch (JsonProcessingException ignored) {
             return "";
         }
+    }
+
+    @RequestMapping(value = "/list")
+    public String getList(Model model) {
+        System.out.println("algo");
+        model.addAttribute("name", "Jorge");
+        return "/WEB-INF/views/PokemonListCard.hbs";
     }
 }

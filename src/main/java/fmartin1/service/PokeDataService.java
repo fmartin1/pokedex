@@ -50,17 +50,15 @@ public class PokeDataService {
         Endpoint allTypesEndpoint = _restTemplate.getForObject("https://pokeapi.co/api/v2/type/", Endpoint.class);
         for (NamedAPIResource typeResource : allTypesEndpoint.getResults()) {
             Type type = _restTemplate.getForObject("https://pokeapi.co/api/v2/type/" + typeResource.getName(), Type.class);
-            for (TypePokemon typePokemon : type.getPokemon()) {
-                if (_pokemonMap.containsKey(typePokemon.getPokemon().getName())) {
-                    List<Type> types = _pokemonMap.get(typePokemon.getPokemon().getName()).getTypes();
-                    if (types.size() < typePokemon.getSlot()) {
-                        types.add(null);
-                    } else {
-                        types.remove(typePokemon.getSlot() - 1);
-                    }
-                    types.add(new Type(type.getName(), typePokemon.getSlot()));
+            type.getPokemon().stream().filter(typePokemon -> _pokemonMap.containsKey(typePokemon.getPokemon().getName())).forEach(typePokemon -> {
+                List<Type> types = _pokemonMap.get(typePokemon.getPokemon().getName()).getTypes();
+                if (types.size() < typePokemon.getSlot()) {
+                    types.add(null);
+                } else {
+                    types.remove(typePokemon.getSlot() - 1);
                 }
-            }
+                types.add(new Type(type.getName(), typePokemon.getSlot()));
+            });
         }
     }
 }
