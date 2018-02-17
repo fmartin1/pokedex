@@ -11,7 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.stream.Collectors;
+import java.util.List;
 
 @SuppressWarnings("unused")
 @Controller
@@ -42,49 +42,65 @@ public class PokedexController {
         return response;
     }
 
-    @RequestMapping(value = "/{pokemonIdName}", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
+    @RequestMapping(value = "/{pokemonIdName}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String getPokemon(@PathVariable("pokemonIdName") String pokemonIdName) {
-        return _pokedexService.getPokemon(pokemonIdName.toLowerCase())
-                .map(Pokemon::toString)
-                .orElse(String.format("Pokemon \"%s\" not found.", pokemonIdName));
+        try {
+            return _objectMapper.writeValueAsString(_pokedexService.getPokemon(pokemonIdName.toLowerCase()).get());
+        } catch (JsonProcessingException ignored) {
+            return "";
+        }
     }
 
-    @RequestMapping(value = "/type", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
+    @RequestMapping(value = "/type", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String sortByType() {
-        return _pokedexService.getAllPokemon()
-                .stream()
-                .sorted(new PokemonComparator(PokemonComparator.Criteria.TYPE))
-                .map(Pokemon::toString)
-                .collect(Collectors.joining("\n"));
+        String response = "";
+        try {
+            StringBuilder json = new StringBuilder("[");
+            List<Pokemon> pokemonSortedByType = _pokedexService.getAllPokemon();
+            pokemonSortedByType.sort(new PokemonComparator(PokemonComparator.Criteria.TYPE));
+            for (Pokemon pokemon : pokemonSortedByType) {
+                json.append(_objectMapper.writeValueAsString(pokemon)).append(",");
+            }
+            json.deleteCharAt(json.length() - 1);
+            json.append("]");
+            response = json.toString();
+        } catch (JsonProcessingException ignored) {
+        }
+        return response;
     }
 
-    @RequestMapping(value = "/type/{typeName}", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
+    @RequestMapping(value = "/type/{typeName}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String getType(@PathVariable("typeName") String typeName) {
-        return _pokedexService.getPokemonOfType(typeName)
-                .stream()
-                .map(Pokemon::toString)
-                .collect(Collectors.joining("\n"));
+        String response = "";
+        try {
+            StringBuilder json = new StringBuilder("[");
+            for (Pokemon pokemon : _pokedexService.getPokemonOfType(typeName)) {
+                json.append(_objectMapper.writeValueAsString(pokemon)).append(",");
+            }
+            json.deleteCharAt(json.length() - 1);
+            json.append("]");
+            response = json.toString();
+        } catch (JsonProcessingException ignored) {
+        }
+        return response;
     }
 
-    @RequestMapping(value = "/generation", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
+    @RequestMapping(value = "/generation", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String sortByGeneration() {
-        return _pokedexService.getAllPokemon()
-                .stream()
-                .sorted(new PokemonComparator(PokemonComparator.Criteria.GENERATION))
-                .map(Pokemon::toString)
-                .collect(Collectors.joining("\n"));
+        return getAllPokemon(null);
     }
 
-    @RequestMapping(value = "/generation/{generationId}", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
+    @RequestMapping(value = "/generation/{generationId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String sortByGeneration(@PathVariable("generationId") int genId) {
-        return _pokedexService.getPokemonOfGeneration(genId)
-                .stream()
-                .map(Pokemon::toString)
-                .collect(Collectors.joining("\n"));
+        try {
+            return _objectMapper.writeValueAsString(_pokedexService.getPokemonOfGeneration(genId));
+        } catch (JsonProcessingException ignored) {
+            return "";
+        }
     }
 }

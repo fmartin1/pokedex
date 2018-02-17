@@ -1,18 +1,14 @@
 package fmartin1.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fmartin1.model.common.Endpoint;
 import fmartin1.model.common.NamedAPIResource;
 import fmartin1.model.pokemon.Pokemon;
 import fmartin1.model.pokemon.type.Type;
 import fmartin1.model.pokemon.type.TypePokemon;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 

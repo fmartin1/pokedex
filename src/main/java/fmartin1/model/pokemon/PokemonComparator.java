@@ -17,7 +17,7 @@ public class PokemonComparator implements Comparator<Pokemon> {
     @Override
     public int compare(Pokemon o1, Pokemon o2) {
         int byCriteria = 0;
-        int NO_RESULT = 0;
+        final int NO_RESULT = 0;
         switch (_sortCriteria) {
             case TYPE:
                 byCriteria = compareByType(o1, o2, Type.Slot.FIRST);
