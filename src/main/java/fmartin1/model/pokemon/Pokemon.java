@@ -1,30 +1,22 @@
 package fmartin1.model.pokemon;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import fmartin1.model.pokeapi.PokeAPINamedResource;
+import fmartin1.model.pokeapi.PokeAPIType;
 import fmartin1.model.pokemon.generation.Generation;
 import fmartin1.model.pokemon.generation.Generations;
 import fmartin1.model.pokemon.type.Type;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-@SuppressWarnings("unused")
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Pokemon extends PokeAPINamedResource implements Comparable<Pokemon> {
+public class Pokemon implements Comparable<Pokemon> {
     private static final int ID_URL_INDEX = 6;
+    private final String _name;
+    private final String _url;
     private final int _id;
     private final Generation _generation;
-
-    public List<Type> getTypes() {
-        return _types;
-    }
-
-    private final List<Type> _types = new ArrayList<>();
+    private Type _type1;
+    private Type _type2;
 
     public Pokemon(String name, String url) {
-        super(name, url);
+        _name = name;
+        _url = url;
         _id = Integer.parseInt(url.split("/")[ID_URL_INDEX]);
         _generation = Generations.getByPokemonId(_id);
     }
@@ -33,20 +25,39 @@ public class Pokemon extends PokeAPINamedResource implements Comparable<Pokemon>
         return _id;
     }
 
-    public Optional<Type> getType(Type.Slot slot) {
-        return Optional.ofNullable(_types.size() <= slot.getIndex() ? null : _types.get(slot.getIndex()));
+    public String getName() {
+        return _name;
     }
 
-    public void setTypes(List<Type> types) {
-        _types.clear();
-        _types.addAll(types);
+    public String getUrl() {
+        return _url;
     }
 
-    @Override
-    public String toString() {
-        return String.format("%03d %-20s %s Types %8s %8s", _id, super.getName(), _generation.getName(),
-                getType(Type.Slot.FIRST).map(Type::getName).orElse(""),
-                getType(Type.Slot.SECOND).map(Type::getName).orElse(""));
+    public Type getType1() {
+        return _type1;
+    }
+
+    public Type getType2() {
+        return _type2;
+    }
+
+    public Generation getGeneration() {
+        return _generation;
+    }
+
+    public void setType1(Type _type1) {
+        this._type1 = _type1;
+    }
+
+    public void setType2(Type _type2) {
+        this._type2 = _type2;
+    }
+
+    public void setTypes(PokeAPIType[] types) {
+        _type1 = new Type(types[0].getName());
+        if (types.length == 2) {
+            _type2 = new Type(types[1].getName());
+        }
     }
 
     @Override

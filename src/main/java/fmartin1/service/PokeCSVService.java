@@ -5,9 +5,7 @@ import fmartin1.model.pokemon.type.Type;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 @Service
 class PokeCSVService {
@@ -59,8 +57,8 @@ class PokeCSVService {
 
     private String csvStringOf(Pokemon pokemon) {
         return pokemon.getName() + ","
-                + pokemon.getType(Type.Slot.FIRST) + ","
-                + pokemon.getType(Type.Slot.SECOND) + ","
+                + pokemon.getType1().getName() + ","
+                + pokemon.getType2().getName() + ","
                 + pokemon.getUrl() + "\n";
     }
 
@@ -71,12 +69,10 @@ class PokeCSVService {
                 array[POKEMON_NAME_CSV_INDEX],
                 array[POKEMON_URL_CSV_INDEX]);
 
-        List<Type> types = new ArrayList<>();
-        types.add(new Type(array[POKEMON_TYPE_1_CSV_INDEX], 1));
+        pokemon.setType1(new Type(array[POKEMON_TYPE_1_CSV_INDEX]));
         if (!"null".equals(array[POKEMON_TYPE_2_CSV_INDEX])) {
-            types.add(new Type(array[POKEMON_TYPE_2_CSV_INDEX], 2));
+            pokemon.setType2(new Type(array[POKEMON_TYPE_2_CSV_INDEX]));
         }
-        pokemon.setTypes(types);
 
         return pokemon;
     }

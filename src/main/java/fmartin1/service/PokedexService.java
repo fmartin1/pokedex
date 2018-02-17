@@ -14,13 +14,13 @@ import java.util.stream.Collectors;
 public class PokedexService {
 
     private static final Comparator<Pokemon> TYPE_COMPARATOR = (p1, p2) -> {
-        Optional<Type> o1Type = p1.getType(Type.Slot.FIRST);
-        Optional<Type> o2Type = p1.getType(Type.Slot.FIRST);
-        if (o1Type.isPresent() && o2Type.isPresent()) {
-            return o1Type.get().compareTo(o2Type.get());
-        } else if (o1Type.isPresent()) {
+        Type o1Type = p1.getType1();
+        Type o2Type = p1.getType2();
+        if (o1Type!=null && o2Type!=null) {
+            return o1Type.getName().compareTo(o2Type.getName());
+        } else if (o1Type!=null) {
             return -1;
-        } else if (o2Type.isPresent()) {
+        } else if (o2Type!=null) {
             return 1;
         } else {
             return 0;
@@ -52,8 +52,8 @@ public class PokedexService {
     public List<Pokemon> getPokemonOfType(String type) {
         return getPokemonMap().values().stream()
                 .filter(pokemon ->
-                        type.equals(pokemon.getType(Type.Slot.FIRST).map(Type::getName).orElse(null)) ||
-                                type.equals(pokemon.getType(Type.Slot.SECOND).map(Type::getName).orElse(null)))
+                        type.equals(pokemon.getType1().getName()) ||
+                                type.equals(pokemon.getType2().getName()))
                 .collect(Collectors.toList());
     }
 
