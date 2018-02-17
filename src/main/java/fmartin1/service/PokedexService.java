@@ -7,14 +7,25 @@ import fmartin1.model.pokemon.type.Type;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class PokedexService {
+
+    private static final Comparator<Pokemon> TYPE_COMPARATOR = (p1, p2) -> {
+        Optional<Type> o1Type = p1.getType(Type.Slot.FIRST);
+        Optional<Type> o2Type = p1.getType(Type.Slot.FIRST);
+        if (o1Type.isPresent() && o2Type.isPresent()) {
+            return o1Type.get().compareTo(o2Type.get());
+        } else if (o1Type.isPresent()) {
+            return -1;
+        } else if (o2Type.isPresent()) {
+            return 1;
+        } else {
+            return 0;
+        }
+    };
 
     private final PokeDataService _pokeDataService;
 
@@ -55,13 +66,19 @@ public class PokedexService {
                 .collect(Collectors.toList());
     }
 
-    public Pokemon getPokemon(String string) {
-        if (string.matches("\\d+")) {
-            int index = Integer.parseInt(string) - 1;
-            return (0 < index && index < getPokemonMap().size()) ?
-                    (Pokemon) getPokemonMap().values().toArray()[index] : null;
-        } else {
-            return getPokemonMap().get(string);
-        }
+    public Pokemon getPokemonById(int pokemonId) {
+        int index = pokemonId - 1;
+        return (0 < index && index < getPokemonMap().size()) ?
+                (Pokemon) getPokemonMap().values().toArray()[index] : null;
+    }
+
+    public Pokemon getPokemonByName(String string) {
+        return getPokemonMap().get(string);
+    }
+
+    public List<Pokemon> getPokemonSortedByType() {
+        List<Pokemon> sortedByTypePokemonList = getAllPokemon();
+        sortedByTypePokemonList.sort(TYPE_COMPARATOR);
+        return sortedByTypePokemonList;
     }
 }
