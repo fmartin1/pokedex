@@ -1,6 +1,8 @@
 package fmartin1.controller;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fmartin1.model.pokemon.Pokemon;
 import fmartin1.model.pokemon.PokemonComparator;
 import fmartin1.service.PokedexService;
@@ -16,19 +18,28 @@ import java.util.stream.Collectors;
 @RequestMapping("pokemon")
 public class PokedexController {
     private final PokedexService _pokedexService;
+    private final ObjectMapper _objectMapper = new ObjectMapper();
 
     @Autowired
-    public PokedexController(PokedexService pokedexService) {
-        _pokedexService = pokedexService;
+    public PokedexController(PokedexService _pokedexService) {
+        this._pokedexService = _pokedexService;
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
+    @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String getAllPokemon(@RequestParam(value = "limit", required = false) Integer limit) {
-        return _pokedexService.getAllPokemon(limit)
-                .stream()
-                .map(Pokemon::toString)
-                .collect(Collectors.joining("\n"));
+        String response = "";
+        try {
+            StringBuilder json = new StringBuilder("[");
+            for (Pokemon pokemon : _pokedexService.getAllPokemon(limit)) {
+                json.append(_objectMapper.writeValueAsString(pokemon)).append(",");
+            }
+            json.deleteCharAt(json.length() - 1);
+            json.append("]");
+            response = json.toString();
+        } catch (JsonProcessingException ignored) {
+        }
+        return response;
     }
 
     @RequestMapping(value = "/{pokemonIdName}", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)

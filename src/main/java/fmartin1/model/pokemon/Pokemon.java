@@ -16,6 +16,11 @@ public class Pokemon extends NamedAPIResource implements Comparable<Pokemon> {
     private static final int ID_URL_INDEX = 6;
     private final int _id;
     private final Generation _generation;
+
+    public List<Type> getTypes() {
+        return _types;
+    }
+
     private final List<Type> _types = new ArrayList<>();
 
     public Pokemon(String name, String url) {
