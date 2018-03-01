@@ -1,14 +1,13 @@
 package fmartin1.service;
 
 import fmartin1.model.pokemon.Pokemon;
-import fmartin1.model.pokemon.type.Type;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.util.LinkedHashMap;
 
 @Service
-class PokeCSVService {
+public class PokeCSVService {
 
     private static final String CACHE_PATH = "C:/pokedata/pokedata.csv";
     private static final int POKEMON_NAME_CSV_INDEX = 0;
@@ -57,8 +56,8 @@ class PokeCSVService {
 
     private String csvStringOf(Pokemon pokemon) {
         return pokemon.getName() + ","
-                + pokemon.getType1().getName() + ","
-                + pokemon.getType2().getName() + ","
+                + pokemon.getType1() + ","
+                + pokemon.getType2() + ","
                 + pokemon.getUrl() + "\n";
     }
 
@@ -69,9 +68,9 @@ class PokeCSVService {
                 array[POKEMON_NAME_CSV_INDEX],
                 array[POKEMON_URL_CSV_INDEX]);
 
-        pokemon.setType1(new Type(array[POKEMON_TYPE_1_CSV_INDEX]));
+        pokemon.setType1(array[POKEMON_TYPE_1_CSV_INDEX]);
         if (!"null".equals(array[POKEMON_TYPE_2_CSV_INDEX])) {
-            pokemon.setType2(new Type(array[POKEMON_TYPE_2_CSV_INDEX]));
+            pokemon.setType2(array[POKEMON_TYPE_2_CSV_INDEX]);
         }
 
         return pokemon;

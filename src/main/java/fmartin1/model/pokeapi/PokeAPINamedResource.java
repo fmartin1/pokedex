@@ -1,25 +1,23 @@
 package fmartin1.model.pokeapi;
 
 public class PokeAPINamedResource {
-    protected final String _name;
-    private final String _url;
-
-    public PokeAPINamedResource(String name, String url) {
-        _name = name;
-        _url = url;
-    }
-
-    public PokeAPINamedResource(String name) {
-        _name = name;
-        _url = null;
-    }
+    private String _name;
+    private String _url;
 
     public String getName() {
         return _name;
     }
 
+    public void setName(String name) {
+        _name = name;
+    }
+
     public String getUrl() {
         return _url;
+    }
+
+    public void setUrl(String url) {
+        _url = url;
     }
 
     @Override
@@ -29,13 +27,11 @@ public class PokeAPINamedResource {
 
         PokeAPINamedResource that = (PokeAPINamedResource) o;
 
-        assert _url != null;
         return _url.equals(that._url);
     }
 
     @Override
     public int hashCode() {
-        assert _url != null;
         return _url.hashCode();
     }
 }

@@ -16,7 +16,6 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
     @Bean
     public InternalResourceViewResolver resolver() {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-//        viewResolver.setViewClass(M.class);
         viewResolver.setPrefix("/WEB-INF/views/");
         viewResolver.setSuffix(".hbs");
         return viewResolver;
@@ -24,8 +23,7 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry
-                .addResourceHandler("/webjars/**")
+        registry.addResourceHandler("/webjars/**")
                 .addResourceLocations("/webjars/");
         registry.addResourceHandler("/static/**").addResourceLocations("/static/");
         registry.addResourceHandler("/**").addResourceLocations("/");
