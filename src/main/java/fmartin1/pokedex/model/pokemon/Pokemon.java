@@ -9,6 +9,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.util.Objects;
 import java.util.Optional;
 
 @Entity
@@ -17,6 +18,8 @@ public class Pokemon implements Comparable<Pokemon> {
     public static final int TOTAL_POKEMON = 802;
     private static final int ID_URL_INDEX = 6;
     private static final String REGEX_CHARACTERS_ONLY = "[a-z|A-Z]+";
+
+    private static final String POKEAPI_URL_PATTERN = "https:\\/\\/pokeapi\\.co\\/api\\/v2\\/pokemon\\/\\d+";
 
     @Id
     @NotNull
@@ -77,7 +80,7 @@ public class Pokemon implements Comparable<Pokemon> {
 
     public void setUrl(String url) {
         this.url = url;
-        if (url != null) {
+        if (url != null && url.matches(POKEAPI_URL_PATTERN)) {
             id = Integer.parseInt(url.split("/")[ID_URL_INDEX]);
             generation = Generations.getByPokemonId(id);
         }

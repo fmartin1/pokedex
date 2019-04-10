@@ -32,7 +32,7 @@ public class PokemonController {
     @ResponseBody
     public Pokemon getByNameOrId(@PathVariable("nameOrId") String nameOrId) {
         logger.info("Get {}", nameOrId);
-        return pokedexService.findPokemonByNameOrId(nameOrId);
+        return pokedexService.findPokemon(nameOrId);
     }
 
     @GetMapping("type/{name}")
