@@ -1,6 +1,7 @@
 server:
-  context-path: "/pokedex/v1"
+  context-path: /pokedex/v1
   port: 8085
+
 spring:
   datasource:
     url: "jdbc:postgresql://localhost:5432/pokedex"
@@ -9,3 +10,14 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     generate-ddl: true
+
+pokeapi:
+  url: https://pokeapi.co/api/v2
+  endpoints:
+    pokemon: pokemon
+    type: type
+  headers:
+    user-agent: "poke api"
+
+pokedex:
+  total-pokemon: 802

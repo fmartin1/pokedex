@@ -7,22 +7,33 @@ import java.util.List;
  */
 public class PokeAPIType {
 
-    private String _name;
-    private List<PokeAPITypePokemonRelation> _typePokemonRelation;
+    private String name;
+
+    private String url;
+
+    private List<PokeAPITypePokemonRelation> typePokemonRelation;
 
     public String getName() {
-        return _name;
+        return name;
     }
 
     public void setName(String name) {
-        _name = name;
+        this.name = name;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public List<PokeAPITypePokemonRelation> getTypePokemonRelation() {
-        return _typePokemonRelation;
+        return typePokemonRelation;
     }
 
     public void setPokemon(List<PokeAPITypePokemonRelation> typePokemonRelation) {
-        _typePokemonRelation = typePokemonRelation;
+        this.typePokemonRelation = typePokemonRelation;
     }
 }
