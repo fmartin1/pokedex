@@ -1,4 +1,4 @@
-package fmartin1.util;
+package fmartin1.pokedex.util;
 
 public class URLUtil {
     public static int getIdFromUrl(String url) {

@@ -1,4 +1,4 @@
-package fmartin1.model.pokeapi;
+package fmartin1.pokedex.model.pokeapi;
 
 /**
  * Created by fmartinez on 2/17/2018.

@@ -1,6 +1,7 @@
-package fmartin1.model.pokemon.generation;
+package fmartin1.pokedex.model.pokemon.generation;
 
 public enum Generation {
+    GENERATION_0(0, 0, "No Generation Found"),
     GENERATION_1(1, 151, "Generation 01"),
     GENERATION_2(152, 351, "Generation 02"),
     GENERATION_3(352, 386, "Generation 03"),

@@ -1,4 +1,4 @@
-package fmartin1.model.pokemon.generation;
+package fmartin1.pokedex.model.pokemon.generation;
 
 public class Generations {
     public static Generation getGenerationById(int id) {
@@ -18,7 +18,7 @@ public class Generations {
             case 7:
                 return Generation.GENERATION_7;
             default:
-                return null;
+                return Generation.GENERATION_0;
         }
     }
 
@@ -44,6 +44,6 @@ public class Generations {
         if (pokemonId <= Generation.GENERATION_7._lastPokemon) {
             return Generation.GENERATION_7;
         }
-        return null;
+        return Generation.GENERATION_0;
     }
 }

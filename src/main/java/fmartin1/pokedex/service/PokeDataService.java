@@ -1,10 +1,10 @@
-package fmartin1.service;
+package fmartin1.pokedex.service;
 
-import fmartin1.model.pokeapi.PokeAPIEndpoint;
-import fmartin1.model.pokeapi.PokeAPINamedResource;
-import fmartin1.model.pokeapi.PokeAPIType;
-import fmartin1.model.pokeapi.PokeAPITypePokemonRelation;
-import fmartin1.model.pokemon.Pokemon;
+import fmartin1.pokedex.model.pokeapi.PokeAPIEndpoint;
+import fmartin1.pokedex.model.pokeapi.PokeAPINamedResource;
+import fmartin1.pokedex.model.pokeapi.PokeAPIType;
+import fmartin1.pokedex.model.pokeapi.PokeAPITypePokemonRelation;
+import fmartin1.pokedex.model.pokemon.Pokemon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 
 @Service("poke-data-service")
@@ -55,16 +56,18 @@ public class PokeDataService {
 
         String allPokemonEndpointStr = URI + "pokemon?limit=" + Pokemon.TOTAL_POKEMON;
 
-        for (PokeAPINamedResource r : get(allPokemonEndpointStr, PokeAPIEndpoint.class).getResults()) {
-            pokemonMap.put(r.getName(), new Pokemon(r.getName(), r.getUrl()));
-        }
+        Arrays.stream(get(allPokemonEndpointStr, PokeAPIEndpoint.class).getResults()).forEach(resource -> {
+            Pokemon p = new Pokemon();
+            p.setName(resource.getName());
+            p.setUrl(resource.getUrl());
+            pokemonMap.put(resource.getName(), p);
+        });
 
-        for (PokeAPINamedResource r : get(URI + "type", PokeAPIEndpoint.class).getResults()) {
-            PokeAPIType pokeAPIType = get(r.getUrl(), PokeAPIType.class);
-
-            for (PokeAPITypePokemonRelation relation : pokeAPIType.getTypePokemonRelation()) {
+        Arrays.stream(get(URI + "type", PokeAPIEndpoint.class)
+                .getResults())
+                .map(r -> get(r.getUrl(), PokeAPIType.class)).forEach(pokeAPIType -> {
+            pokeAPIType.getTypePokemonRelation().forEach(relation -> {
                 String pokemonName = relation.getPokemonResource().getName();
-
                 if (pokemonMap.containsKey(pokemonName)) {
                     Pokemon pokemon = pokemonMap.get(pokemonName);
 
@@ -74,8 +77,8 @@ public class PokeDataService {
                         pokemon.setType2(pokeAPIType.getName());
                     }
                 }
-            }
-        }
+            });
+        });
 
         return pokemonMap;
     }

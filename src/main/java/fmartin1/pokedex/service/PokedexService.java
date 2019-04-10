@@ -1,8 +1,9 @@
-package fmartin1.service;
+package fmartin1.pokedex.service;
 
-import fmartin1.model.pokemon.Pokemon;
-import fmartin1.model.pokemon.generation.Generation;
-import fmartin1.model.pokemon.generation.Generations;
+import fmartin1.pokedex.model.pokemon.Pokemon;
+import fmartin1.pokedex.model.pokemon.generation.Generation;
+import fmartin1.pokedex.model.pokemon.generation.Generations;
+import fmartin1.pokedex.repository.PokemonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class PokedexService {
+
+    @Autowired
+    private PokemonRepository pokemonRepository;
 
     private static final Comparator<Pokemon> TYPE_COMPARATOR = (p1, p2) -> {
         String o1Type = p1.getType1();
@@ -72,5 +76,13 @@ public class PokedexService {
         List<Pokemon> sortedByTypePokemonList = getAllPokemon();
         sortedByTypePokemonList.sort(TYPE_COMPARATOR);
         return sortedByTypePokemonList;
+    }
+
+    /**
+     * Load pokemon from PokeApi and store them in the DB.
+     */
+    public void dbRefresh() {
+        LinkedHashMap<String, Pokemon> pokemonMap = _pokeDataService.getPokemonFromPokeAPI();
+        pokemonRepository.save(pokemonMap.values());
     }
 }

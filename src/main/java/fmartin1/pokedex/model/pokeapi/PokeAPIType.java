@@ -1,6 +1,4 @@
-package fmartin1.model.pokeapi;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+package fmartin1.pokedex.model.pokeapi;
 
 import java.util.List;
 

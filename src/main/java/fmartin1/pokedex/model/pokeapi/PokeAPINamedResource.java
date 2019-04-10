@@ -1,4 +1,4 @@
-package fmartin1.model.pokeapi;
+package fmartin1.pokedex.model.pokeapi;
 
 public class PokeAPINamedResource {
     private String _name;

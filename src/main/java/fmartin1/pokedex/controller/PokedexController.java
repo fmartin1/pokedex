@@ -1,19 +1,18 @@
-package fmartin1.controller;
+package fmartin1.pokedex.controller;
 
 
-import fmartin1.model.pokemon.Pokemon;
-import fmartin1.service.PokedexService;
+import fmartin1.pokedex.model.pokemon.Pokemon;
+import fmartin1.pokedex.service.PokedexService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@SuppressWarnings("unused")
-@RestController
-@RequestMapping("pokemon")
+@Controller
+@RequestMapping(value="/")
 public class PokedexController {
     private final PokedexService _pokedexService;
 
