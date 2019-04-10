@@ -2,8 +2,10 @@ package fmartin1.pokedex.service;
 
 import fmartin1.pokedex.model.pokeapi.PokeAPIEndpoint;
 import fmartin1.pokedex.model.pokeapi.PokeAPIType;
+import fmartin1.pokedex.model.pokeapi.PokeAPITypePokemonRelation;
 import fmartin1.pokedex.model.pokemon.Pokemon;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -20,8 +22,11 @@ public class PokeDataService {
     private final RestTemplate _restTemplate = new RestTemplate();
     private final HttpEntity<String> _httpEntity;
 
-    public PokeDataService(HttpEntity<String> httpEntity) {
-        _httpEntity = httpEntity;
+    public PokeDataService() {
+        HttpHeaders _httpHeaders = new HttpHeaders();
+        _httpHeaders.set("User-Agent", "poke api");
+
+        _httpEntity = new HttpEntity<>(_httpHeaders);
     }
 
     public LinkedHashMap<String, Pokemon> getPokemonFromPokeAPI() {
@@ -39,8 +44,9 @@ public class PokeDataService {
         Arrays.stream(get(URI + "type", PokeAPIEndpoint.class)
                 .getResults())
                 .map(r -> get(r.getUrl(), PokeAPIType.class)).forEach(pokeAPIType -> {
-            pokeAPIType.getTypePokemonRelation().forEach(relation -> {
+            for (PokeAPITypePokemonRelation relation : pokeAPIType.getTypePokemonRelation()) {
                 String pokemonName = relation.getPokemonResource().getName();
+
                 if (pokemonMap.containsKey(pokemonName)) {
                     Pokemon pokemon = pokemonMap.get(pokemonName);
 
@@ -50,7 +56,7 @@ public class PokeDataService {
                         pokemon.setType2(pokeAPIType.getName());
                     }
                 }
-            });
+            }
         });
 
         return pokemonMap;
