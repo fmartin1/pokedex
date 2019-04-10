@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@CacheConfig(cacheNames = "pokemon")
+@CacheConfig(cacheNames = "${pokedex.cache.name}")
 public class PokedexService {
 
     private PokemonRepository pokemonRepository;

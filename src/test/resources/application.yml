@@ -21,3 +21,5 @@ pokeapi:
 
 pokedex:
   total-pokemon: 802
+  cache:
+    name: pokemon

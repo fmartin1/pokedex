@@ -20,7 +20,7 @@ import java.util.LinkedHashMap;
 import java.util.Optional;
 
 @Service
-@CacheConfig(cacheNames = "pokemon")
+@CacheConfig(cacheNames = "${pokedex.cache.name}")
 public class PokeAPIClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(PokeAPIClient.class);
 
