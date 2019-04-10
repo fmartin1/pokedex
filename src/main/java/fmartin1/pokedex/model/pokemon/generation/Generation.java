@@ -13,17 +13,9 @@ public enum Generation {
     int _lastPokemon;
     String _name;
 
-    Generation(int first, int last, String name) {
-        _firstPokemon = first;
-        _lastPokemon = last;
+    Generation(int firstPokemon, int lastPokemon, String name) {
+        _firstPokemon = firstPokemon;
+        _lastPokemon = lastPokemon;
         _name = name;
-    }
-
-    public String getName() {
-        return _name;
-    }
-
-    public boolean isOriginFor(int pokemonId) {
-        return _firstPokemon <= pokemonId && pokemonId <= _lastPokemon;
     }
 }
