@@ -1,13 +1,9 @@
 package fmartin1.pokedex.service;
 
 import fmartin1.pokedex.model.pokeapi.PokeAPIEndpoint;
-import fmartin1.pokedex.model.pokeapi.PokeAPINamedResource;
 import fmartin1.pokedex.model.pokeapi.PokeAPIType;
-import fmartin1.pokedex.model.pokeapi.PokeAPITypePokemonRelation;
 import fmartin1.pokedex.model.pokemon.Pokemon;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -21,34 +17,11 @@ public class PokeDataService {
 
     private static final String URI = "https://pokeapi.co/api/v2/";
 
-    private final PokeCSVService _pokeCSVService;
     private final RestTemplate _restTemplate = new RestTemplate();
-    private final HttpHeaders _httpHeaders = new HttpHeaders();
     private final HttpEntity<String> _httpEntity;
-    private LinkedHashMap<String, Pokemon> _pokemonMap = new LinkedHashMap<>();
 
-    @Autowired
-    public PokeDataService(PokeCSVService pokeCSVService) {
-        _pokeCSVService = pokeCSVService;
-
-        _httpHeaders.set("User-Agent", "poke api");
-
-        _httpEntity = new HttpEntity<>(_httpHeaders);
-    }
-
-    LinkedHashMap<String, Pokemon> getPokemonMap() {
-        if (_pokemonMap.isEmpty()) {
-            getPokemonFromDataSources();
-        }
-        return _pokemonMap;
-    }
-
-    private void getPokemonFromDataSources() {
-        _pokemonMap = _pokeCSVService.loadPokemonFromCSV();
-        if (_pokemonMap.isEmpty()) {
-            _pokemonMap = getPokemonFromPokeAPI();
-            _pokeCSVService.writePokemonToCSV(_pokemonMap);
-        }
+    public PokeDataService(HttpEntity<String> httpEntity) {
+        _httpEntity = httpEntity;
     }
 
     public LinkedHashMap<String, Pokemon> getPokemonFromPokeAPI() {

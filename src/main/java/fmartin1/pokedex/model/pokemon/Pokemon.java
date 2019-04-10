@@ -17,7 +17,7 @@ public class Pokemon implements Comparable<Pokemon> {
     private String name;
     private String url;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private Generation generation;
     private String type1;
     private String type2;
