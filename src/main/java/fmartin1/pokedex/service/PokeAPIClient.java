@@ -8,6 +8,7 @@ import fmartin1.pokedex.model.pokeapi.PokeAPITypePokemonRelation;
 import fmartin1.pokedex.model.pokemon.Pokemon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.LinkedHashMap;
 import java.util.Optional;
 
 @Service
+@CacheConfig(cacheNames = "pokemon")
 public class PokeAPIClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(PokeAPIClient.class);
 
@@ -36,7 +38,7 @@ public class PokeAPIClient {
         httpEntity = new HttpEntity<>(httpHeaders);
     }
 
-    @Cacheable("pokemon")
+    @Cacheable(key = "#result.name")
     public LinkedHashMap<String, Pokemon> getPokemon() {
         LinkedHashMap<String, Pokemon> pokemonMap = new LinkedHashMap<>();
 
@@ -85,7 +87,7 @@ public class PokeAPIClient {
         return pokemonMap;
     }
 
-    @Cacheable("pokemon")
+    @Cacheable
     public Optional<Pokemon> getPokemon(String pokemonName) {
         Optional<Pokemon> pokemon = Optional.empty();
 
