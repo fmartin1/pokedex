@@ -12,7 +12,7 @@ import javax.validation.constraints.Pattern;
 import java.util.Optional;
 
 @Entity
-@Table(name="pokemon")
+@Table(name = "pokemon")
 public class Pokemon implements Comparable<Pokemon> {
     public static final int TOTAL_POKEMON = 802;
     private static final int ID_URL_INDEX = 6;
@@ -41,14 +41,17 @@ public class Pokemon implements Comparable<Pokemon> {
     @Pattern(regexp = REGEX_CHARACTERS_ONLY)
     private String type2;
 
-    public Pokemon() {}
+    public Pokemon() {
+    }
 
     public Pokemon(PokeAPIPokemon apiPokemon) {
         id = apiPokemon.getId();
         name = apiPokemon.getName();
         url = apiPokemon.getUrl();
         type1 = apiPokemon.getTypes()[0].getSlot() == 1 ? apiPokemon.getTypes()[0].getType().getName() : apiPokemon.getTypes()[1].getType().getName();
-        type2 = apiPokemon.getTypes()[0].getSlot() == 2 ? apiPokemon.getTypes()[0].getType().getName() : apiPokemon.getTypes()[1].getType().getName();
+        if(apiPokemon.getTypes().length == 2) {
+            type2 = apiPokemon.getTypes()[0].getSlot() == 2 ? apiPokemon.getTypes()[0].getType().getName() : apiPokemon.getTypes()[1].getType().getName();
+        }
         generation = Generations.getGenerationById(id);
     }
 
