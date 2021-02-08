@@ -8,10 +8,9 @@ import fmartin1.pokedex.model.pokeapi.PokeAPITypePokemonRelation;
 import fmartin1.pokedex.model.pokemon.Pokemon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -21,6 +20,7 @@ import java.util.LinkedHashMap;
 import java.util.Optional;
 
 @Service
+@CacheConfig(cacheNames = "${pokedex.cache.name}")
 public class PokeAPIClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(PokeAPIClient.class);
 
@@ -38,39 +38,56 @@ public class PokeAPIClient {
         httpEntity = new HttpEntity<>(httpHeaders);
     }
 
+    @Cacheable(key = "#result.name")
     public LinkedHashMap<String, Pokemon> getPokemon() {
         LinkedHashMap<String, Pokemon> pokemonMap = new LinkedHashMap<>();
 
         String allPokemonEndpointStr = pokeApiConfig.getUrl() + "pokemon?limit=" + Pokemon.TOTAL_POKEMON;
 
-        Arrays.stream(get(allPokemonEndpointStr, PokeAPIEndpoint.class).getResults()).forEach(resource -> {
-            Pokemon pokemon = new Pokemon();
-            pokemon.setName(resource.getName());
-            pokemon.setUrl(resource.getUrl());
-            pokemonMap.put(resource.getName(), pokemon);
-        });
+        try {
+            Arrays.stream(get(allPokemonEndpointStr, PokeAPIEndpoint.class).getResults()).forEach(resource -> {
+                Pokemon pokemon = new Pokemon();
+                pokemon.setName(resource.getName());
+                pokemon.setUrl(resource.getUrl());
+                pokemonMap.put(resource.getName(), pokemon);
+            });
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                LOGGER.error("PokeAPI said: " + allPokemonEndpointStr + " Not Found.");
+            }
+            e.printStackTrace();
+        }
 
-        Arrays.stream(get(pokeApiConfig.getUrl() + pokeApiConfig.getEndpoints().get(PokeAPIConfiguration.ENDPOINT_TYPE), PokeAPIEndpoint.class)
-                .getResults())
-                .map(result -> get(result.getUrl(), PokeAPIType.class)).forEach(pokeAPIType -> {
-            for (PokeAPITypePokemonRelation relation : pokeAPIType.getTypePokemonRelation()) {
-                String pokemonName = relation.getPokemonResource().getName();
+        String typeEndpoint = pokeApiConfig.getUrl() + pokeApiConfig.getEndpoints().get(PokeAPIConfiguration.ENDPOINT_TYPE);
+        try {
+            Arrays.stream(get(typeEndpoint, PokeAPIEndpoint.class)
+                    .getResults())
+                    .map(result -> get(result.getUrl(), PokeAPIType.class)).forEach(pokeAPIType -> {
+                for (PokeAPITypePokemonRelation relation : pokeAPIType.getTypePokemonRelation()) {
+                    String pokemonName = relation.getPokemonResource().getName();
 
-                if (pokemonMap.containsKey(pokemonName)) {
-                    Pokemon pokemon = pokemonMap.get(pokemonName);
+                    if (pokemonMap.containsKey(pokemonName)) {
+                        Pokemon pokemon = pokemonMap.get(pokemonName);
 
-                    if (relation.getTypeSlot() == 1) {
-                        pokemon.setType1(pokeAPIType.getName());
-                    } else {
-                        pokemon.setType2(pokeAPIType.getName());
+                        if (relation.getTypeSlot() == 1) {
+                            pokemon.setType1(pokeAPIType.getName());
+                        } else {
+                            pokemon.setType2(pokeAPIType.getName());
+                        }
                     }
                 }
+            });
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                LOGGER.error("PokeAPI said: " + typeEndpoint + " Not Found.");
             }
-        });
+            e.printStackTrace();
+        }
 
         return pokemonMap;
     }
 
+    @Cacheable
     public Optional<Pokemon> getPokemon(String pokemonName) {
         Optional<Pokemon> pokemon = Optional.empty();
 
